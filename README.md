@@ -13,16 +13,17 @@ To build the Monitor Application, ensure you have `g++` and the `ncurses` librar
 
 ```bash
 g++ -o ui_test_program main.cpp src/cpu_monitor.cpp src/memory_monitor.cpp src/disk_monitor.cpp src/ui.cpp -Iinclude -lncurses
-
-How to Run
+```
+## How to Run
 
 After building the application, you can run it with the following command:
-
+```bash
 ./ui_test_program
+```
 
-The application will display three separate sections for CPU, memory, and disk monitor data in visual tables. The data will be updated every 5 seconds.
+The application will display three separate sections for CPU, memory, and disk monitor data in visual tables. The data will be updated every **5 seconds**.
 
-File Structure
+## File Structure
 
 .
 ├── include
