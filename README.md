@@ -24,7 +24,7 @@ After building the application, you can run it with the following command:
 The application will display three separate sections for CPU, memory, and disk monitor data in visual tables. The data will be updated every **5 seconds**.
 
 ## File Structure
-
+```
 .
 ├── include
 │   ├── cpu_monitor.h
@@ -39,6 +39,7 @@ The application will display three separate sections for CPU, memory, and disk m
 ├── main.cpp
 ├── README.md
 └── ui_test_program (Executable)
+```
 
 
 
