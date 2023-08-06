@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include <unistd.h>
+#include <map>
 
 #include <dirent.h>
 #include <sys/types.h>
@@ -12,7 +13,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <ctime>
 
 void CPUMonitor::retrieveOverallCPUUsage(double& totalUsage, double& freeCPU) const {
     std::ifstream file("/proc/stat");
@@ -54,14 +55,12 @@ void CPUMonitor::retrievePerProcessCPUUsage(std::vector<CPUData>& cpuDataList) c
     closedir(dir);
 
     cpuDataList.clear();
-    long clock_ticks_per_second = sysconf(_SC_CLK_TCK);
 
-    // Static vectors to keep track of previous values
-    static std::vector<long> prevTotalTime(pids.size(), 0);
-    static std::vector<double> prevCpuUsage(pids.size(), 0.0);
+    // Map to store the previous CPU usage values for each process
+    static std::map<int, std::tuple<unsigned long, unsigned long, unsigned long, unsigned long>> prevCPUValues;
 
-    for (size_t i = 0; i < pids.size(); ++i) {
-        std::string statPath = "/proc/" + std::to_string(pids[i]) + "/stat";
+    for (int pid : pids) {
+        std::string statPath = "/proc/" + std::to_string(pid) + "/stat";
         std::ifstream file(statPath);
         if (!file.is_open()) {
             continue;
@@ -74,33 +73,34 @@ void CPUMonitor::retrievePerProcessCPUUsage(std::vector<CPUData>& cpuDataList) c
         std::istringstream iss(line);
         std::string processName;
         std::string stat;
-        int ppid, pgrp, session, tty_nr, tpgid, flags, minflt, cminflt, majflt, cmajflt;
         unsigned long utime, stime, cutime, cstime;
-        long priority, nice, num_threads, itrealvalue, starttime;
+        iss >> stat; // Read the process name (enclosed in parentheses)
+        std::getline(iss, processName, ')'); // Extract the process name from parentheses
 
-        iss >> stat >> processName >> ppid >> pgrp >> session >> tty_nr >> tpgid >> flags >> minflt >> cminflt
-            >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> priority >> nice >> num_threads
-            >> itrealvalue >> starttime;
+        // Skip the first 12 fields and read utime, stime, cutime, and cstime
+        for (int i = 0; i < 12; ++i) {
+            iss >> stat;
+        }
+        iss >> utime >> stime >> cutime >> cstime;
 
-        long totalTime = utime + stime + cutime + cstime;
-        double elapsedTime = clock_ticks_per_second;
-        double cpuUsage = 0.0;
-
+        // Calculate the total CPU time (including child processes)
+        unsigned long totalTime = utime + stime + cutime + cstime;
         // Check if we have previous data for this process
-        if (prevTotalTime[i] != 0) {
-            // Calculate CPU usage as the difference between the current and previous data
-            long timeDiff = totalTime - prevTotalTime[i];
-            double elapsedDiff = elapsedTime - prevCpuUsage[i];
-            if (elapsedDiff > 0.0) {
-                cpuUsage = (timeDiff / elapsedDiff) * 100.0;
-            }
+        auto it = prevCPUValues.find(pid);
+        if (it != prevCPUValues.end()) {
+            // Get the previous CPU time values for this process
+            unsigned long prevUtime, prevStime, prevCutime, prevCstime;
+            std::tie(prevUtime, prevStime, prevCutime, prevCstime) = it->second;
+
+            // Calculate CPU usage as the difference between the current and previous total CPU times
+            double elapsedTime = sysconf(_SC_CLK_TCK); // Clock ticks per second
+            double cpuUsage = ((totalTime - prevUtime - prevStime - prevCutime - prevCstime) / elapsedTime) * 100.0;
+
+            cpuDataList.push_back({processName, cpuUsage});
         }
 
-        // Update previous values for the next iteration
-        prevTotalTime[i] = totalTime;
-        prevCpuUsage[i] = elapsedTime;
-
-        cpuDataList.push_back({processName, cpuUsage});
+        // Update the previous CPU time values for this process
+        prevCPUValues[pid] = std::make_tuple(utime, stime, cutime, cstime);
     }
 
     // Sort the CPU data based on CPU usage in descending order
