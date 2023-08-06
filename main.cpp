@@ -174,7 +174,7 @@ printSeparator(diskWin, y++, 1, maxX / 3);
     wrefresh(diskWin);
 
 // added :
-sleep(5);
+sleep(2);
 }
     getch();
     endwin();
