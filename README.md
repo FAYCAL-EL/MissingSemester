@@ -1,8 +1,13 @@
 # Monitor Application
 
+add to readme:
+-(to quit the app use q or Q or ctrl+C)
+-screenshots
+
+
 The Monitor Application is a command-line utility that monitors CPU, memory, and disk usage on your system. It provides a user-friendly interface with visual tables displaying real-time usage statistics.
 
-## verfication overviews
+## verfication overview
 
 - [X] `README.md` with build instructions
 - [X] Builds on Linux VM (Ubuntu)
