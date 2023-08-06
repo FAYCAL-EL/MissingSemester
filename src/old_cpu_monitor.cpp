@@ -56,12 +56,8 @@ void CPUMonitor::retrievePerProcessCPUUsage(std::vector<CPUData>& cpuDataList) c
     cpuDataList.clear();
     long clock_ticks_per_second = sysconf(_SC_CLK_TCK);
 
-    // Static vectors to keep track of previous values
-    static std::vector<long> prevTotalTime(pids.size(), 0);
-    static std::vector<double> prevCpuUsage(pids.size(), 0.0);
-
-    for (size_t i = 0; i < pids.size(); ++i) {
-        std::string statPath = "/proc/" + std::to_string(pids[i]) + "/stat";
+    for (int pid : pids) {
+        std::string statPath = "/proc/" + std::to_string(pid) + "/stat";
         std::ifstream file(statPath);
         if (!file.is_open()) {
             continue;
@@ -84,21 +80,7 @@ void CPUMonitor::retrievePerProcessCPUUsage(std::vector<CPUData>& cpuDataList) c
 
         long totalTime = utime + stime + cutime + cstime;
         double elapsedTime = clock_ticks_per_second;
-        double cpuUsage = 0.0;
-
-        // Check if we have previous data for this process
-        if (prevTotalTime[i] != 0) {
-            // Calculate CPU usage as the difference between the current and previous data
-            long timeDiff = totalTime - prevTotalTime[i];
-            double elapsedDiff = elapsedTime - prevCpuUsage[i];
-            if (elapsedDiff > 0.0) {
-                cpuUsage = (timeDiff / elapsedDiff) * 100.0;
-            }
-        }
-
-        // Update previous values for the next iteration
-        prevTotalTime[i] = totalTime;
-        prevCpuUsage[i] = elapsedTime;
+        double cpuUsage = (totalTime / elapsedTime) * 100.0;
 
         cpuDataList.push_back({processName, cpuUsage});
     }

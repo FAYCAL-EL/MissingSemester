@@ -3,32 +3,46 @@
 #include <sstream>
 #include <algorithm>
 #include <unistd.h>
-
+#include <iostream>
+#include <string>
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+    void MemoryMonitor::retrieveOverallMemoryUsage(double& totalUsage, double& freeMemory) const {
+        std::ifstream file("/proc/meminfo");
+        std::string line;
+        unsigned long memTotalKB = 0, memFreeKB = 0, buffersKB = 0, cachedKB = 0;
 
+        while (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string memLabel;
+            unsigned long valueKB;
 
-void MemoryMonitor::retrieveOverallMemoryUsage(double& totalUsage, double& freeMemory) const {
-    std::ifstream file("/proc/meminfo");
-    std::string line;
+            if (iss >> memLabel >> valueKB) {
+                if (memLabel == "MemTotal:")
+                    memTotalKB = valueKB;
+                else if (memLabel == "MemFree:")
+                    memFreeKB = valueKB;
+                else if (memLabel == "Buffers:")
+                    buffersKB = valueKB;
+                else if (memLabel == "Cached:")
+                    cachedKB = valueKB;
+            }
+        }
 
-    // Read the first two lines for total and free memory
-    std::getline(file, line);
-    std::getline(file, line);
-    file.close();
+        file.close();
 
-    std::istringstream iss(line);
-    std::string memLabel;
-    unsigned long total, free, available, buffers, cached;
+        // Calculate current total memory usage and free memory
+        // Note: The "Buffers" and "Cached" memory can be considered as reclaimable
+        //       if needed, so we add them to the "free memory" calculation.
+        double totalMemory = static_cast<double>(memTotalKB) / 1024.0;
+        double reclaimableMemory = static_cast<double>(buffersKB + cachedKB) / 1024.0;
+        double usedMemory = totalMemory - (static_cast<double>(memFreeKB) / 1024.0) - reclaimableMemory;
 
-    iss >> memLabel >> total >> memLabel >> free >> memLabel >> available >> memLabel >> buffers >> memLabel >> cached;
-
-    totalUsage = 100.0 - ((free * 100.0) / total);
-    freeMemory = (free * 100.0) / total;
-}
-
+        totalUsage = usedMemory;
+        freeMemory = totalMemory - usedMemory;
+    }
 void MemoryMonitor::retrievePerProcessMemoryUsage(std::vector<MemoryData>& memoryDataList) const {
     std::vector<int> pids;
     std::string dirPath = "/proc";
