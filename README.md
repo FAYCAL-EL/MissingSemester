@@ -1,10 +1,5 @@
 # Monitor Application
 
-add to readme:
--(to quit the app use q or Q or ctrl+C)
--screenshots
-
-
 The Monitor Application is a command-line utility that monitors CPU, memory, and disk usage on your system. It provides a user-friendly interface with visual tables displaying real-time usage statistics.
 
 ## verfication overview
@@ -48,7 +43,10 @@ After building the application, you can run it with the following command:
 ./monitor
 ```
 
-The application will display three separate sections for CPU, memory, and disk monitor data in visual tables. The data will be updated every **2 seconds**.
+The application will display three separate sections for CPU, memory, and disk monitor data in visual tables. The data will be updated every **2 seconds**.To quit the application, you can use one of the following methods:
+
+    Press q or Q while the application is running.
+    Use Ctrl+C in the terminal to terminate the application.
 
 ## File Structure
 ```
@@ -63,9 +61,15 @@ The application will display three separate sections for CPU, memory, and disk m
 │   └── memory_monitor.cpp
 ├── main.cpp
 ├── README.md
+├── screenshots
 └── monitor (Executable)
 ```
 
 include: Contains header files for the CPU, memory, and disk monitors.
 src: Contains source files for the CPU, memory, and disk monitors.
 monitor: The compiled executable of the Monitor Application.
+
+## Screenshots
+
+![Screenshot 1](screenshots/image1.png)
+![Screenshot 2](screenshots/image2.png)
