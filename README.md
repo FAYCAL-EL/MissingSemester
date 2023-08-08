@@ -48,6 +48,14 @@ The application will display three separate sections for CPU, memory, and disk m
     Press q or Q while the application is running.
     Use Ctrl+C in the terminal to terminate the application.
 
+## Viewing Tips
+
+To ensure that all the statistics are fully visible within your terminal window, you may need to zoom out your terminal's size. The application's UI is designed to present data in an ordered manner, with the most used tasks listed first. By adjusting the terminal's zoom level, you can have a comprehensive view of the real-time usage statistics for CPU, memory, and disk.
+
+You can zoom out using keyboard shortcuts such as `Ctrl` + `-` (minus sign) or your terminal emulator's zoom functionality. This will help you see the complete tables.
+
+Keep in mind that the data is presented in an organized manner, from the most used to the least used tasks, making it easier to prioritize and assess system resource usage at a glance.
+
 ## File Structure
 ```
 .
