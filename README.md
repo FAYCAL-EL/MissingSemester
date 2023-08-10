@@ -2,7 +2,7 @@
 
 The Monitor Application is a command-line utility that monitors CPU, memory, and disk usage on your system. It provides a user-friendly interface with visual tables displaying real-time usage statistics.
 
-## verfication overview
+## verification overview
 
 - [X] `README.md` with build instructions
 - [X] Builds on Linux VM (Ubuntu)
@@ -23,6 +23,27 @@ The Monitor Application is a command-line utility that monitors CPU, memory, and
 - [X] Real-time stats collection 2-seconds refresh
 - [X] UI
 	- [X] Terminal-based UI
+
+## File Structure
+```
+.
+├── include
+│   ├── cpu_monitor.h
+│   ├── disk_monitor.h
+│   └── memory_monitor.h
+├── src
+│   ├── cpu_monitor.cpp
+│   ├── disk_monitor.cpp
+│   └── memory_monitor.cpp
+├── main.cpp
+├── README.md
+├── screenshots
+└── monitor (Executable)
+```
+
+include: Contains header files for the CPU, memory, and disk monitors.
+src: Contains source files for the CPU, memory, and disk monitors.
+monitor: The compiled executable of the Monitor Application.
 
 ## Dependencies
 
@@ -55,27 +76,6 @@ To ensure that all the statistics are fully visible within your terminal window,
 You can zoom out using keyboard shortcuts such as `Ctrl` + `-` (minus sign) or your terminal emulator's zoom functionality. This will help you see the complete tables.
 
 Keep in mind that the data is presented in an organized manner, from the most used to the least used tasks, making it easier to prioritize and assess system resource usage at a glance.
-
-## File Structure
-```
-.
-├── include
-│   ├── cpu_monitor.h
-│   ├── disk_monitor.h
-│   └── memory_monitor.h
-├── src
-│   ├── cpu_monitor.cpp
-│   ├── disk_monitor.cpp
-│   └── memory_monitor.cpp
-├── main.cpp
-├── README.md
-├── screenshots
-└── monitor (Executable)
-```
-
-include: Contains header files for the CPU, memory, and disk monitors.
-src: Contains source files for the CPU, memory, and disk monitors.
-monitor: The compiled executable of the Monitor Application.
 
 ## Screenshots
 
