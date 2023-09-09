@@ -72,9 +72,13 @@ To ensure that all the statistics are fully visible within your terminal window,
 
 You can zoom out using keyboard shortcuts such as `Ctrl` + `-` (minus sign) or your terminal emulator's zoom functionality. This will help you see the complete tables.
 
+
 Keep in mind that the data is presented in an organized manner, from the most used to the least used tasks, making it easier to prioritize and assess system resource usage at a glance.
 
 ## Screenshots
 
 ![Screenshot 1](screenshots/image1.png)
 ![Screenshot 2](screenshots/image2.png)
+
+## License
+[MIT License](LICENSE)
