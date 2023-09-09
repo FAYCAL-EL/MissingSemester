@@ -2,11 +2,9 @@
 
 The Monitor Application is a command-line utility that monitors CPU, memory, and disk usage on your system. It provides a user-friendly interface with visual tables displaying real-time usage statistics.
 
-## verification overview
+## Application overview
 
-- [X] `README.md` with build instructions
-- [X] Builds on Linux VM (Ubuntu)
-- [X] Used one of the allowed programming languages C++
+- [X] Builds on Linux
 - [X] Monitor CPU
 	- [X] Current total usage
 	- [X] Current usage per application
@@ -21,8 +19,7 @@ The Monitor Application is a command-line utility that monitors CPU, memory, and
 	- [X] Read rate per application
 	- [X] Write rate per application
 - [X] Real-time stats collection 2-seconds refresh
-- [X] UI
-	- [X] Terminal-based UI
+- [X] Terminal-based UI
 
 ## File Structure
 ```
@@ -41,9 +38,9 @@ The Monitor Application is a command-line utility that monitors CPU, memory, and
 └── monitor (Executable)
 ```
 
-include: Contains header files for the CPU, memory, and disk monitors.
-src: Contains source files for the CPU, memory, and disk monitors.
-monitor: The compiled executable of the Monitor Application.
+- include: Contains header files for the CPU, memory, and disk monitors. 
+- src: Contains source files for the CPU, memory, and disk monitors.
+- monitor: The compiled executable of the Monitor Application.
 
 ## Dependencies
 
